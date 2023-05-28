@@ -19,7 +19,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 app.use(morgan("tiny"));
 app.use(express.json());
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 

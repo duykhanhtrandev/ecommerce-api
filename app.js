@@ -26,7 +26,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/v1", (req, res) => {
-  res.json(req.signedCookies);
+  console.log(req.signedCookies);
+  res.send("e-commerce api");
 });
 
 app.use("/api/v1/auth", authRouter);

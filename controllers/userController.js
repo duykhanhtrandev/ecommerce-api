@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
+const { attachCookiesToResponse, createTokenUser } = require("../utils");
 
 const getAllUsers = async (req, res) => {
   console.log(req.user);
@@ -21,24 +22,28 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 
+// update with user.save()
 const updateUser = async (req, res) => {
   const {
     body: { name, email },
     user: { userId },
-    params: { id },
   } = req;
 
-  if (name === "" || email === "") {
-    throw new CustomError.BadRequestError(
-      "Name and Email fields can not be empty"
-    );
+  if (!name || !email) {
+    throw new CustomError.BadRequestError("Please provide all values");
   }
 
-  const user = await User.findOneAndUpdate({ _id: id }, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  res.status(StatusCodes.OK).json({ user });
+  const user = await User.findOne({ _id: userId });
+
+  user.email = email;
+  user.name = name;
+
+  await user.save();
+
+  const tokenUser = createTokenUser(user);
+  attachCookiesToResponse({ res: res, user: tokenUser });
+
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
 const updateUserPassword = async (req, res) => {
@@ -67,3 +72,29 @@ module.exports = {
   updateUser,
   updateUserPassword,
 };
+
+// update user with findOneAndUpdate
+// const updateUser = async (req, res) => {
+//   const {
+//     body: { name, email },
+//     user: { userId },
+//   } = req;
+
+//   if (!name || !email) {
+//     throw new CustomError.BadRequestError("Please provide all values");
+//   }
+
+//   const user = await User.findOneAndUpdate(
+//     { _id: userId },
+//     { name, email },
+//     {
+//       new: true,
+//       runValidators: true,
+//     }
+//   );
+
+//   const tokenUser = createTokenUser(user);
+//   attachCookiesToResponse({ res: res, user: tokenUser });
+
+//   res.status(StatusCodes.OK).json({ user: tokenUser });
+// };

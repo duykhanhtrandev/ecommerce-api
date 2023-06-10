@@ -6,6 +6,7 @@ const app = express();
 // rest of the packages
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 const cors = require("cors");
 
 // connectDB
@@ -24,6 +25,9 @@ app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(cors());
+
+app.use(express.static("./public"));
+app.use(fileUpload());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

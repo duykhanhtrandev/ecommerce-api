@@ -1,3 +1,5 @@
 /node_modules
 .env
 /mockData
+/docs.json
+/windows_amd64.exe

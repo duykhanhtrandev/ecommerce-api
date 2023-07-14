@@ -10,8 +10,7 @@ Live demo: https://furniture-store-2tib.onrender.com/
 
 ### 2. Users
 
-- Show current user.
-- **_Check permissions_**: Get all users, get single user , update user, update user password.
+- **_Check permissions_**: Get all users, get single user , update user, update user password, Show current user.
 
 ### 3. Products
 
